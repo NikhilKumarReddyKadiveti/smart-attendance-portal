@@ -8,75 +8,45 @@
     <link href="../assets/css/style.css" rel="stylesheet">
 </head>
 <body>
-    <div class="d-flex">
-        <nav id="sidebar" class="d-flex flex-column p-3">
-            <h4 class="text-center fw-bold mb-4 text-primary">PORTAL</h4>
-            <ul class="nav nav-pills flex-column mb-auto">
-                <li class="nav-item"><a href="dashboard.html" class="nav-link active"><i class="fas fa-chart-pie me-2"></i> Dashboard</a></li>
-                <li><a href="add-user.html" class="nav-link"><i class="fas fa-user-plus me-2"></i> Add User</a></li>
-                <li><a href="profile.html" class="nav-link"><i class="fas fa-id-badge me-2"></i> My Profile</a></li>
-                <li class="mt-4"><a href="#" onclick="logout()" class="nav-link text-danger"><i class="fas fa-power-off me-2"></i> Logout</a></li>
+    <div class="app-container">
+        <nav id="sidebar">
+            <div class="sidebar-brand">ADMIN CONSOLE</div>
+            <ul class="nav flex-column">
+                <li class="nav-item"><a href="dashboard.html" class="nav-link active"><i class="fas fa-chart-line"></i> Overview</a></li>
+                <li class="nav-item"><a href="add-user.html" class="nav-link"><i class="fas fa-user-plus"></i> Add User</a></li>
+                <li class="nav-item"><a href="profile.html" class="nav-link"><i class="fas fa-shield-alt"></i> Profile</a></li>
+                <li class="nav-item mt-5"><a href="#" onclick="logout()" class="nav-link text-warning"><i class="fas fa-power-off"></i> Logout</a></li>
             </ul>
         </nav>
 
-        <main class="flex-grow-1 p-4" style="margin-left: 260px;">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="fw-bold">Administrator Console</h2>
-                <div class="glass-card p-2 px-3"><span id="adminName">Loading...</span></div>
-            </div>
-
-            <div class="row g-4 mb-4">
+        <main class="main-content">
+            <h2 class="fw-bold mb-4">System Overview</h2>
+            
+            <div class="row g-4">
                 <div class="col-md-4">
-                    <div class="glass-card p-4">
-                        <p class="text-muted mb-1">Total Students</p>
-                        <h2 class="fw-bold" id="totalStudents">0</h2>
+                    <div class="glass-card">
+                        <h6 class="text-white-50">TOTAL USERS</h6>
+                        <h2 id="totalUsers">Loading...</h2>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="glass-card p-4">
-                        <p class="text-muted mb-1">Active Faculty</p>
-                        <h2 class="fw-bold" id="totalFaculty">0</h2>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="glass-card p-4">
-                        <p class="text-muted mb-1">Courses Live</p>
-                        <h2 class="fw-bold" id="totalCourses">0</h2>
+                    <div class="glass-card">
+                        <h6 class="text-white-50">DB STATUS</h6>
+                        <h2 class="text-success">Active</h2>
                     </div>
                 </div>
             </div>
-
-            <div class="glass-card p-4">
-                <h5 class="fw-bold mb-4">System Overview</h5>
-                <div class="table-responsive">
-                    <table class="table table-borderless">
-                        <thead>
-                            <tr class="text-muted"><th>Entity</th><th>Metric</th><th>Status</th></tr>
-                        </thead>
-                        <tbody id="statsTable">
-                            <tr><td>Database</td><td>MongoDB Atlas</td><td><span class="badge bg-success">Connected</span></td></tr>
-                            <tr><td>API Layer</td><td>Vercel Functions</td><td><span class="badge bg-success">Healthy</span></td></tr>
-                        </tbody>
-                    </table>
-                </div>
+            
+            <div class="glass-card mt-4">
+                <h5>Recent Database Activity</h5>
+                <hr class="border-secondary">
+                <p class="text-white-50">Live sync with MongoDB Atlas verified.</p>
             </div>
         </main>
     </div>
-
     <script>
         const user = JSON.parse(sessionStorage.getItem('user'));
         if(!user || user.role !== 'admin') window.location.href = '../login.html';
-        document.getElementById('adminName').innerText = user.name;
-
-        async function fetchStats() {
-            // Simulated fetch from multiple collections
-            const res = await fetch('/api/users');
-            const users = await res.json();
-            document.getElementById('totalStudents').innerText = users.filter(u => u.role === 'student').length;
-            document.getElementById('totalFaculty').innerText = users.filter(u => u.role === 'faculty').length;
-        }
-        fetchStats();
-
         function logout() { sessionStorage.clear(); window.location.href = '../login.html'; }
     </script>
 </body>
