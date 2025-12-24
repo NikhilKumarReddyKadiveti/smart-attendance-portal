@@ -5,7 +5,13 @@ let dbConnection;
 
 module.exports = async function connectToDatabase() {
   if (dbConnection) return dbConnection;
-  await client.connect();
-  dbConnection = client.db('smart_attendance');
-  return dbConnection;
+  try {
+    await client.connect();
+    dbConnection = client.db('smart_attendance');
+    console.log("Connected to MongoDB Atlas");
+    return dbConnection;
+  } catch (error) {
+    console.error("DB Connection Error:", error);
+    throw error;
+  }
 };
