@@ -1,73 +1,99 @@
-/* SDLC: Design Phase - Enhanced UI/UX */
+/* SDLC: Design Phase - High-End Glassmorphism UI */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap');
+
 :root {
-    --primary: #4e73df;
-    --secondary: #858796;
-    --success: #1cc88a;
-    --info: #36b9cc;
-    --warning: #f6c23e;
-    --danger: #e74a3b;
-    --dark: #5a5c69;
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --primary-grad: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --accent: #764ba2;
 }
 
 body {
-    background-color: #f8f9fc;
-    font-family: 'Nunito', sans-serif;
-    color: #5a5c69;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: fixed url('https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    min-height: 100vh;
+    color: #2d3436;
 }
 
-/* Modern Card Hover Effects */
-.card {
+/* Glass Card Effect */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    transition: 0.3s transform ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Sidebar Styling */
+#sidebar {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid var(--glass-border);
+    min-width: 260px;
+    height: 100vh;
+    position: fixed;
+}
+
+.nav-link {
+    color: #2d3436 !important;
+    margin: 8px 15px;
+    border-radius: 12px;
+    transition: 0.3s;
+    font-weight: 500;
+}
+
+.nav-link:hover, .nav-link.active {
+    background: var(--primary-grad);
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
+}
+
+/* Modern Inputs */
+.form-control {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 12px;
+    backdrop-filter: blur(5px);
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: none;
+    border-color: var(--accent);
+}
+
+/* Glass Button */
+.btn-glass {
+    background: var(--primary-grad);
     border: none;
     border-radius: 12px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    padding: 10px 25px;
+    color: white;
+    font-weight: 600;
+    transition: 0.3s;
 }
 
-/* Glassmorphism Loader */
-#loader-overlay {
+.btn-glass:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+}
+
+/* Loader Styling */
+#global-loader {
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(255, 255, 255, 0.8);
+    inset: 0;
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(10px);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
-    backdrop-filter: blur(5px);
-}
-
-.spinner {
-    width: 50px;
-    height: 50px;
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid var(--primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-/* Profile Page Styling */
-.profile-header {
-    background: linear-gradient(135deg, var(--primary), #224abe);
-    height: 150px;
-    border-radius: 12px 12px 0 0;
-}
-.profile-img-container {
-    margin-top: -60px;
-}
-.profile-img {
-    width: 120px;
-    height: 120px;
-    border: 5px solid white;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-/* Form Styles */
-.form-control:focus {
-    box-shadow: none;
-    border-color: var(--primary);
 }
