@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark Attendance</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="../assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="wrapper">
+        <nav id="sidebar" class="bg-success">
+            <div class="sidebar-header bg-success">
+                <h3>Faculty</h3>
+            </div>
+            <ul class="list-unstyled components">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li class="active"><a href="mark-attendance.html">Mark Attendance</a></li>
+                <li><a href="view-attendance.html">View Records</a></li>
+                <li><a href="#" onclick="Auth.logout()">Logout</a></li>
+            </ul>
+        </nav>
+
+        <div id="content">
+            <h2 class="mb-4">Mark Student Attendance</h2>
+            
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form id="attendanceForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Select Student</label>
+                                <select class="form-select" id="studentSelect" required>
+                                    <option value="">-- Choose Student --</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Subject</label>
+                                <select class="form-select" id="subject" required>
+                                    <option value="Computer Networks">Computer Networks</option>
+                                    <option value="Web Development">Web Development</option>
+                                    <option value="Database Systems">Database Systems</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Date</label>
+                                <input type="date" class="form-control" id="date" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" id="status" required>
+                                    <option value="Present">Present</option>
+                                    <option value="Absent">Absent</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Save Record</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/storage.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script>
+        const user = Auth.checkSession();
+        
+        // Populate Student Dropdown
+        const students = Storage.getStudents();
+        const select = document.getElementById('studentSelect');
+        students.forEach(s => {
+            const opt = document.createElement('option');
+            opt.value = s.id;
+            opt.textContent = `${s.name} (${s.email})`;
+            select.appendChild(opt);
+        });
+
+        // Set default date to today
+        document.getElementById('date').valueAsDate = new Date();
+
+        // Handle Submit
+        document.getElementById('attendanceForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const studentId = document.getElementById('studentSelect').value;
+            const subject = document.getElementById('subject').value;
+            const date = document.getElementById('date').value;
+            const status = document.getElementById('status').value;
+
+            // SDLC: Implementation - Saving logic
+            Storage.saveAttendance({
+                studentId: studentId,
+                subject: subject,
+                date: date,
+                status: status,
+                markedBy: user.id
+            });
+
+            alert('Attendance Marked Successfully');
+            this.reset();
+            document.getElementById('date').valueAsDate = new Date();
+        });
+    </script>
+</body>
+</html>
