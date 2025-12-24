@@ -2,41 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Faculty Dashboard</title>
+    <title>Faculty Dashboard | Smart Attendance</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="../assets/css/style.css" rel="stylesheet">
 </head>
 <body>
-    <div class="wrapper">
-        <nav id="sidebar" class="bg-success">
-            <div class="sidebar-header bg-success">
-                <h3><i class="fas fa-chalkboard-teacher"></i> Faculty</h3>
-            </div>
-            <ul class="list-unstyled components">
-                <li class="active"><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li><a href="mark-attendance.html"><i class="fas fa-check-circle"></i> Mark Attendance</a></li>
-                <li><a href="view-attendance.html"><i class="fas fa-list"></i> View Records</a></li>
-                <li><a href="#" onclick="Auth.logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    <div class="app-container">
+        <nav id="sidebar">
+            <div class="sidebar-brand">FACULTY PORTAL</div>
+            <ul class="nav flex-column">
+                <li class="nav-item"><a href="dashboard.html" class="nav-link active"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li class="nav-item"><a href="add-course.html" class="nav-link"><i class="fas fa-plus-circle"></i> Add Course</a></li>
+                <li class="nav-item"><a href="mark-attendance.html" class="nav-link"><i class="fas fa-user-check"></i> Mark Attendance</a></li>
+                <li class="nav-item"><a href="profile.html" class="nav-link"><i class="fas fa-user-circle"></i> Profile</a></li>
+                <li class="nav-item mt-5"><a href="#" onclick="logout()" class="nav-link text-warning"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </nav>
 
-        <div id="content">
-            <h2 class="mb-4">Faculty Dashboard</h2>
-            <div class="alert alert-success">
-                Welcome, <span id="facultyName" class="fw-bold"></span>
+        <main class="main-content">
+            <div class="glass-card mb-4 d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Welcome, <span id="facultyName" class="text-info">...</span></h4>
+                <div class="badge bg-success p-2">Session Active</div>
             </div>
-            <p>Select "Mark Attendance" from the sidebar to start a class session.</p>
-        </div>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="glass-card text-center">
+                        <i class="fas fa-book fa-3x mb-3 text-info"></i>
+                        <h3>0</h3>
+                        <p class="mb-0 text-white-50">Assigned Courses</p>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="glass-card h-100">
+                        <h5>Quick Actions</h5>
+                        <div class="d-flex gap-3 mt-3">
+                            <a href="mark-attendance.html" class="btn btn-glass">Mark Today's Attendance</a>
+                            <a href="add-course.html" class="btn btn-outline-light rounded-pill px-4">Create New Course</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
-    <script src="../assets/js/storage.js"></script>
-    <script src="../assets/js/auth.js"></script>
     <script>
-        const user = Auth.checkSession();
-        if(user.role !== 'faculty') window.location.href = '../login.html';
+        const user = JSON.parse(sessionStorage.getItem('user'));
+        if(!user || user.role !== 'faculty') window.location.href = '../login.html';
         document.getElementById('facultyName').innerText = user.name;
+        
+        function logout() { sessionStorage.clear(); window.location.href = '../login.html'; }
     </script>
 </body>
 </html>
