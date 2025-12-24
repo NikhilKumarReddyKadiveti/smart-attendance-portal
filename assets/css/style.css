@@ -1,18 +1,16 @@
-/* SDLC: Design Phase - Premium Glassmorphism UI */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap');
 
 :root {
-    --glass-bg: rgba(255, 255, 255, 0.15);
+    --glass-bg: rgba(255, 255, 255, 0.12);
     --glass-border: rgba(255, 255, 255, 0.2);
-    --card-bg: rgba(255, 255, 255, 0.95);
     --primary-grad: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     --sidebar-width: 260px;
 }
 
 body {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-                url('https://images.unsplash.com/photo-1517842332039-b444403d9bc6?auto=format&fit=crop&w=1920&q=80');
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1920&q=80');
     background-size: cover;
     background-attachment: fixed;
     min-height: 100vh;
@@ -20,18 +18,12 @@ body {
     color: #fff;
 }
 
-/* Layout Container */
-.app-container {
-    display: flex;
-    min-height: 100vh;
-}
+.app-container { display: flex; min-height: 100vh; }
 
-/* Glass Sidebar */
 #sidebar {
     width: var(--sidebar-width);
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
     border-right: 1px solid var(--glass-border);
     position: fixed;
     height: 100vh;
@@ -40,92 +32,53 @@ body {
 }
 
 .sidebar-brand {
-    font-size: 1.5rem;
-    font-weight: 700;
+    font-size: 1.4rem;
+    font-weight: 800;
     text-align: center;
     margin-bottom: 3rem;
+    letter-spacing: 1px;
     background: var(--primary-grad);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .nav-link {
-    color: rgba(255,255,255,0.8) !important;
+    color: rgba(255,255,255,0.7) !important;
     border-radius: 12px;
-    padding: 12px 20px !important;
-    margin-bottom: 10px;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
+    padding: 12px 18px !important;
+    margin-bottom: 8px;
+    transition: 0.3s ease;
 }
-
-.nav-link i { margin-right: 12px; font-size: 1.1rem; }
 
 .nav-link:hover, .nav-link.active {
     background: var(--primary-grad);
     color: white !important;
     transform: translateX(5px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
-/* Main Content Area */
-.main-content {
-    flex: 1;
-    margin-left: var(--sidebar-width);
-    padding: 2.5rem;
-}
+.main-content { flex: 1; margin-left: var(--sidebar-width); padding: 2.5rem; }
 
-/* Glass Cards */
 .glass-card {
     background: var(--glass-bg);
     backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
     border: 1px solid var(--glass-border);
     border-radius: 24px;
     padding: 2rem;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-    color: white;
 }
 
-/* Form Controls */
-.form-control, .form-select {
-    background: rgba(255, 255, 255, 0.1);
+.form-control {
+    background: rgba(255, 255, 255, 0.1) !important;
     border: 1px solid var(--glass-border);
     color: white !important;
     border-radius: 12px;
-    padding: 12px;
 }
-
-.form-control:focus {
-    background: rgba(255, 255, 255, 0.2);
-    box-shadow: none;
-    border-color: #667eea;
-}
-
-option { color: #000; }
 
 .btn-glass {
     background: var(--primary-grad);
     border: none;
     color: white;
-    padding: 12px 30px;
+    padding: 12px 25px;
     border-radius: 12px;
     font-weight: 600;
-    transition: 0.3s;
-}
-
-.btn-glass:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-}
-
-/* Tables */
-.table { color: white !important; }
-.table thead th { border-bottom: 2px solid var(--glass-border); color: rgba(255,255,255,0.6); }
-.table td { border-bottom: 1px solid rgba(255,255,255,0.1); padding: 15px; }
-
-@media (max-width: 768px) {
-    #sidebar { transform: translateX(-100%); transition: 0.3s; }
-    #sidebar.active { transform: translateX(0); }
-    .main-content { margin-left: 0; }
 }
