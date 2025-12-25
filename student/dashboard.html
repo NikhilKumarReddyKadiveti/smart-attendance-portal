@@ -1,71 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="../assets/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/animations.css">
 </head>
 <body>
-    <div class="wrapper">
-        <nav id="sidebar" class="bg-warning text-dark">
-            <div class="sidebar-header bg-warning">
-                <h3 class="text-dark"><i class="fas fa-user-graduate"></i> Student</h3>
-            </div>
-            <ul class="list-unstyled components">
-                <li class="active"><a href="dashboard.html" class="text-dark fw-bold"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li><a href="view-attendance.html" class="text-dark"><i class="fas fa-list"></i> My Attendance</a></li>
-                <li><a href="#" onclick="Auth.logout()" class="text-dark"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-            </ul>
-        </nav>
+    <script src="../assets/js/main.js"></script>
+    <script>const user = checkAuth('student'); renderNav(user);</script>
 
-        <div id="content">
-            <h2 class="mb-4">My Dashboard</h2>
-            <div id="warningAlert" class="alert alert-danger d-none">
-                <i class="fas fa-exclamation-triangle"></i> <strong>Warning!</strong> Your attendance is below 75%.
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card shadow-sm p-4 text-center">
-                        <h4 class="text-muted">Attendance Percentage</h4>
-                        <h1 class="display-1 fw-bold" id="percentage">0%</h1>
-                    </div>
-                </div>
-            </div>
+    <div class="container fade-in">
+        <div style="display:flex; gap:10px; margin-bottom:20px">
+            <button class="btn btn-secondary" onclick="window.location.href='profile.html'">My Profile</button>
+            <button class="btn btn-secondary" onclick="window.location.href='hallticket.html'">Hall Tickets</button>
+            <button class="btn btn-secondary" onclick="window.location.href='fees.html'">Pay Fees</button>
         </div>
+
+        <h2>Attendance Summary</h2>
+        <div id="attendanceGrid" class="grid-cols-2"></div>
     </div>
 
-    <script src="../assets/js/storage.js"></script>
-    <script src="../assets/js/auth.js"></script>
     <script>
-        const user = Auth.checkSession();
-        if(user.role !== 'student') window.location.href = '../login.html';
-
-        // SDLC: Advanced Feature - Calculation Logic
-        const allRecords = Storage.getAttendance();
-        // Filter records for THIS student only
-        const myRecords = allRecords.filter(r => r.studentId == user.id); // Loose equality for string/int
-
-        const total = myRecords.length;
-        const present = myRecords.filter(r => r.status === 'Present').length;
-        
-        let percent = 0;
-        if(total > 0) {
-            percent = Math.round((present / total) * 100);
+        async function loadData() {
+            const data = await apiCall(`/attendance?studentId=${user._id}`);
+            const grid = document.getElementById('attendanceGrid');
+            
+            grid.innerHTML = data.map(item => {
+                const color = item.percentage < 75 ? 'red' : 'var(--accent)';
+                return `
+                <div class="glass-panel pulse">
+                    <h3>${item.courseName}</h3>
+                    <div style="font-size: 2rem; color: ${color}; font-weight:bold;">
+                        ${item.percentage}%
+                    </div>
+                    <p>Attended: ${item.attended} / ${item.totalClasses}</p>
+                    ${item.percentage < 75 ? '<p style="color:red; font-size:0.8rem">⚠️ Low Attendance Warning</p>' : ''}
+                </div>
+                `;
+            }).join('');
         }
-
-        const pEl = document.getElementById('percentage');
-        pEl.innerText = `${percent}%`;
-
-        if(percent < 75) {
-            pEl.classList.add('text-danger');
-            document.getElementById('warningAlert').classList.remove('d-none');
-        } else {
-            pEl.classList.add('text-success');
-        }
+        loadData();
     </script>
 </body>
 </html>
