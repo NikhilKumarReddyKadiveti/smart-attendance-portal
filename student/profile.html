@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <script src="../assets/js/main.js"></script>
+    <script>const user = checkAuth('student'); renderNav(user);</script>
+
+    <div class="container">
+        <div class="glass-panel" style="max-width:600px; margin:0 auto">
+            <h2>Student Profile</h2>
+            <div style="margin-bottom:20px; color: var(--text-muted)">
+                <p><strong>Name:</strong> <span id="pName"></span></p>
+                <p><strong>Roll No:</strong> <span id="pRoll"></span></p>
+                <p><strong>Email:</strong> <span id="pEmail"></span></p>
+            </div>
+            
+            <h3>Update Password</h3>
+            <form id="passForm">
+                <input type="password" id="oldP" placeholder="Old Password" required>
+                <input type="password" id="newP" placeholder="New Password" required>
+                <input type="password" id="confP" placeholder="Confirm New Password" required>
+                <button type="submit" class="btn">Update</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('pName').innerText = user.name;
+        document.getElementById('pRoll').innerText = user.rollNumber;
+        document.getElementById('pEmail').innerText = user.email;
+
+        document.getElementById('passForm').addEventListener('submit', async(e)=>{
+            e.preventDefault();
+            const n = document.getElementById('newP').value;
+            const c = document.getElementById('confP').value;
+            if(n !== c) return alert("Passwords don't match");
+
+            try {
+                await apiCall('/users', 'PUT', {
+                    id: user._id,
+                    oldPassword: document.getElementById('oldP').value,
+                    newPassword: n
+                });
+                alert('Password Updated');
+            } catch(err) { alert(err.message); }
+        })
+    </script>
+</body>
+</html>
