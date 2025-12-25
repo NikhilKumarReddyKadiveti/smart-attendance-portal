@@ -1,46 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8"><title>Fees | Student Portal</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../assets/css/style.css" rel="stylesheet">
+    <title>Fee Payment</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white"><h4>Fee Payment Portal</h4></div>
-            <div class="card-body">
-                <div id="feeStatus" class="alert mb-4"></div>
-                <div id="paymentArea">
-                    <p>Total Tuition Fee: <strong>$5,000</strong></p>
-                    <button id="payBtn" class="btn btn-success">Simulate Payment</button>
-                </div>
-            </div>
-        </div>
+    <script src="../assets/js/main.js"></script>
+    <script>const user = checkAuth('student'); renderNav(user);</script>
+
+    <div class="container">
+        <h2>Fee Details</h2>
+        <div id="feeContainer"></div>
     </div>
+
     <script>
-        const user = JSON.parse(sessionStorage.getItem('user'));
         async function loadFees() {
-            const res = await fetch(`/api/fees?studentId=${user.id}`);
-            const data = await res.json();
-            const statusBox = document.getElementById('feeStatus');
-            if(data.status === 'Paid') {
-                statusBox.className = "alert alert-success";
-                statusBox.innerText = `Fees Paid on ${new Date(data.date).toLocaleDateString()}`;
-                document.getElementById('paymentArea').style.display = 'none';
-            } else {
-                statusBox.className = "alert alert-warning";
-                statusBox.innerText = "Status: Payment Pending";
-            }
+            const fees = await apiCall(`/fees?studentId=${user._id}`);
+            const div = document.getElementById('feeContainer');
+            
+            div.innerHTML = fees.map(f => `
+                <div class="glass-panel">
+                    <h3>${f.term}</h3>
+                    <p>Amount: ₹${f.amount}</p>
+                    <p>Status: <span style="color:${f.status==='Paid'?'green':'orange'}">${f.status}</span></p>
+                    ${f.status !== 'Paid' 
+                        ? `<button class="btn" onclick="pay('${f.term}', ${f.amount})">Pay Now (Simulated)</button>` 
+                        : '<button class="btn btn-secondary" disabled>Paid ✅</button>'}
+                </div>
+            `).join('');
         }
-        document.getElementById('payBtn').onclick = async () => {
-            const res = await fetch('/api/fees', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ studentId: user.id, amount: 5000 })
-            });
-            if(res.ok) { alert('Payment Successful!'); loadFees(); }
-        };
+
+        async function pay(term, amount) {
+            if(!confirm("Simulate payment of ₹"+amount+"?")) return;
+            try {
+                await apiCall('/fees', 'POST', { studentId: user._id, term, amount });
+                alert("Payment Successful!");
+                loadFees();
+            } catch(e) { alert(e.message); }
+        }
         loadFees();
     </script>
 </body>
