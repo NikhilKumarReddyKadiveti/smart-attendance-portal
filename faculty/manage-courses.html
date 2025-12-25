@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Courses</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <script src="../assets/js/main.js"></script>
+    <script>const user = checkAuth('faculty'); renderNav(user);</script>
+
+    <div class="container">
+        <h2>My Courses</h2>
+        <div id="courseList" class="grid-cols-2"></div>
+    </div>
+
+    <script>
+        async function loadCourses() {
+            const courses = await apiCall(`/courses?facultyId=${user._id}`);
+            const list = document.getElementById('courseList');
+            
+            list.innerHTML = courses.map(c => `
+                <div class="glass-panel">
+                    <div style="display:flex; justify-content:space-between">
+                        <h3>${c.name} (${c.code})</h3>
+                        <span style="color: ${c.status === 'open' ? 'var(--accent)' : 'red'}">${c.status.toUpperCase()}</span>
+                    </div>
+                    <p>Total Classes: ${c.totalClasses}</p>
+                    <div style="margin-top:10px">
+                        ${c.status === 'open' 
+                            ? `<button class="btn" onclick="mark('${c._id}')">Take Attendance</button> 
+                               <button class="btn btn-secondary" onclick="closeCourse('${c._id}')">Close Course</button>`
+                            : `<p class="text-muted">Course Closed. Hall tickets generated.</p>`
+                        }
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function mark(id) {
+            localStorage.setItem('currentCourse', id);
+            window.location.href = 'mark-attendance.html';
+        }
+
+        async function closeCourse(id) {
+            if(!confirm("Close course? This will enable Hall Tickets.")) return;
+            await apiCall('/courses', 'PUT', { courseId: id, status: 'closed' });
+            loadCourses();
+        }
+
+        loadCourses();
+    </script>
+</body>
+</html>
